@@ -1,0 +1,26 @@
+modLoader="javafml"
+loaderVersion="[39,)"
+license="MIT License"
+
+[[mods]]
+modId="compasscoords"
+version="${file.jarVersion}"
+displayName="Compass Coords"
+authors="Insane96MCP"
+description='''
+Just a simple Client-side mod that shows coordinates and direction while holding a compass
+'''
+
+[[dependencies.compasscoords]]
+    modId="forge"
+    mandatory=true
+    versionRange="[39,)"
+    ordering="NONE"
+    side="CLIENT"
+    
+[[dependencies.compasscoords]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.18.1,)"
+    ordering="NONE"
+    side="CLIENT"
