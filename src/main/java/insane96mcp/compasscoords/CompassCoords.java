@@ -77,11 +77,43 @@ public class CompassCoords
                 toDraw.add(I18n.get(d));
             }
 
-            int top = scaledHeight - mc.font.lineHeight;
-            for (int i = toDraw.size() - 1; i >= 0; i--) {
-                String text = toDraw.get(i);
-                drawOnScreenWithBackground(event.getMatrixStack(), 2, top, text, -1873784752, 14737632);
-                top -= mc.font.lineHeight;
+            switch (CCConfig.CLIENT.position) {
+                case TOP_LEFT -> {
+                    int top = 2;
+                    int left = 2;
+                    for (int i = toDraw.size() - 1; i >= 0; i--) {
+                        String text = toDraw.get(i);
+                        drawOnScreenWithBackground(event.getMatrixStack(), left, top, text, -1873784752, 14737632);
+                        top += mc.font.lineHeight;
+                    }
+                }
+                case TOP_RIGHT -> {
+                    int top = 2;
+                    int left = scaledWidth - 2;
+                    for (int i = toDraw.size() - 1; i >= 0; i--) {
+                        String text = toDraw.get(i);
+                        drawOnScreenWithBackground(event.getMatrixStack(), left - mc.font.width(text), top, text, -1873784752, 14737632);
+                        top += mc.font.lineHeight;
+                    }
+                }
+                case BOTTOM_LEFT -> {
+                    int top = scaledHeight - mc.font.lineHeight - 1;
+                    int left = 2;
+                    for (int i = toDraw.size() - 1; i >= 0; i--) {
+                        String text = toDraw.get(i);
+                        drawOnScreenWithBackground(event.getMatrixStack(), left, top, text, -1873784752, 14737632);
+                        top -= mc.font.lineHeight;
+                    }
+                }
+                case BOTTOM_RIGHT -> {
+                    int top = scaledHeight - mc.font.lineHeight - 1;
+                    int left = scaledWidth - 2;
+                    for (int i = toDraw.size() - 1; i >= 0; i--) {
+                        String text = toDraw.get(i);
+                        drawOnScreenWithBackground(event.getMatrixStack(), left - mc.font.width(text), top, text, -1873784752, 14737632);
+                        top -= mc.font.lineHeight;
+                    }
+                }
             }
         }
 

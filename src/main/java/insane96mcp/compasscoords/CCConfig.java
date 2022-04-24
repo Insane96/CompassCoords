@@ -18,11 +18,17 @@ public class CCConfig {
 	}
 
 	public static class ClientConfig {
+
+		private final ForgeConfigSpec.ConfigValue<Position> positionConfig;
 		private final ForgeConfigSpec.ConfigValue<Boolean> showYCoordConfig;
 
 		public boolean showYCoord = false;
+		public Position position = Position.BOTTOM_LEFT;
 
 		public ClientConfig(final ForgeConfigSpec.Builder builder) {
+			positionConfig = builder
+					.comment("Coordinates Position")
+					.defineEnum("Position", position);
 			showYCoordConfig = builder
 					.comment("If false, the Y coordinate is not displayed.")
 					.define("Show Y Coordinate", showYCoord);
@@ -30,7 +36,12 @@ public class CCConfig {
 
 		public void loadConfig() {
 			this.showYCoord = this.showYCoordConfig.get();
+			this.position = this.positionConfig.get();
 		}
+	}
+
+	public enum Position {
+		TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT
 	}
 
 	@SubscribeEvent
