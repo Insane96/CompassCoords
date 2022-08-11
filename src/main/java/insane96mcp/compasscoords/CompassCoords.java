@@ -7,8 +7,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.CompassItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.gui.ForgeIngameGui;
+import net.minecraftforge.client.event.CustomizeGuiOverlayEvent;
+import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.IExtensionPoint;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -33,8 +33,8 @@ public class CompassCoords
         static Minecraft mc = Minecraft.getInstance();
 
         @SubscribeEvent
-        public static void renderGameOverlayEvent(RenderGameOverlayEvent.Text event) {
-            if (mc.options.renderDebug && !mc.options.reducedDebugInfo)
+        public static void renderGameOverlayEvent(CustomizeGuiOverlayEvent.DebugText event) {
+            if (mc.options.renderDebug && !mc.options.reducedDebugInfo().get())
                 return;
 
             int scaledWidth = mc.getWindow().getGuiScaledWidth();
@@ -83,7 +83,7 @@ public class CompassCoords
                     int left = 2;
                     for (int i = toDraw.size() - 1; i >= 0; i--) {
                         String text = toDraw.get(i);
-                        drawOnScreenWithBackground(event.getMatrixStack(), left, top, text, -1873784752, 14737632);
+                        drawOnScreenWithBackground(event.getPoseStack(), left, top, text, -1873784752, 14737632);
                         top += mc.font.lineHeight;
                     }
                 }
@@ -92,7 +92,7 @@ public class CompassCoords
                     int left = scaledWidth - 2;
                     for (int i = toDraw.size() - 1; i >= 0; i--) {
                         String text = toDraw.get(i);
-                        drawOnScreenWithBackground(event.getMatrixStack(), left - mc.font.width(text), top, text, -1873784752, 14737632);
+                        drawOnScreenWithBackground(event.getPoseStack(), left - mc.font.width(text), top, text, -1873784752, 14737632);
                         top += mc.font.lineHeight;
                     }
                 }
@@ -101,7 +101,7 @@ public class CompassCoords
                     int left = 2;
                     for (int i = toDraw.size() - 1; i >= 0; i--) {
                         String text = toDraw.get(i);
-                        drawOnScreenWithBackground(event.getMatrixStack(), left, top, text, -1873784752, 14737632);
+                        drawOnScreenWithBackground(event.getPoseStack(), left, top, text, -1873784752, 14737632);
                         top -= mc.font.lineHeight;
                     }
                 }
@@ -110,7 +110,7 @@ public class CompassCoords
                     int left = scaledWidth - 2;
                     for (int i = toDraw.size() - 1; i >= 0; i--) {
                         String text = toDraw.get(i);
-                        drawOnScreenWithBackground(event.getMatrixStack(), left - mc.font.width(text), top, text, -1873784752, 14737632);
+                        drawOnScreenWithBackground(event.getPoseStack(), left - mc.font.width(text), top, text, -1873784752, 14737632);
                         top -= mc.font.lineHeight;
                     }
                 }
@@ -118,7 +118,7 @@ public class CompassCoords
         }
 
         private static void drawOnScreenWithBackground(PoseStack mStack, int x, int y, String text, int backgroundColor, int textColor) {
-            ForgeIngameGui.fill(mStack, x - 1, y - 1, x + mc.font.width(text) + 1, y + mc.font.lineHeight - 1, backgroundColor);
+            ForgeGui.fill(mStack, x - 1, y - 1, x + mc.font.width(text) + 1, y + mc.font.lineHeight - 1, backgroundColor);
             mc.font.draw(mStack, text, x, y, textColor);
         }
     }
