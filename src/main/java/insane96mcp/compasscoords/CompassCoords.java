@@ -5,8 +5,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
-import net.minecraft.world.item.CompassItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.client.event.CustomizeGuiOverlayEvent;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -69,7 +69,7 @@ public class CompassCoords
             else if (direction > -67.5 && direction <= -22.5)
                 d = "compasscoords.south_east";
 
-            if (mainHand.getItem() instanceof CompassItem || offHand.getItem() instanceof CompassItem) {
+            if (mainHand.getItem().equals(Items.COMPASS) || offHand.getItem().equals(Items.COMPASS)) {
                 toDraw.add(String.format("X: %d", x));
                 if (CCConfig.CLIENT.showYCoord)
                     toDraw.add(String.format("Y: %d", y));
@@ -81,7 +81,7 @@ public class CompassCoords
                 case TOP_LEFT -> {
                     int top = 2;
                     int left = 2;
-                    for (int i = toDraw.size() - 1; i >= 0; i--) {
+                    for (int i = 0; i < toDraw.size(); i++) {
                         String text = toDraw.get(i);
                         drawOnScreenWithBackground(event.getPoseStack(), left, top, text, -1873784752, 14737632);
                         top += mc.font.lineHeight;
@@ -90,7 +90,7 @@ public class CompassCoords
                 case TOP_RIGHT -> {
                     int top = 2;
                     int left = scaledWidth - 2;
-                    for (int i = toDraw.size() - 1; i >= 0; i--) {
+                    for (int i = 0; i < toDraw.size(); i++) {
                         String text = toDraw.get(i);
                         drawOnScreenWithBackground(event.getPoseStack(), left - mc.font.width(text), top, text, -1873784752, 14737632);
                         top += mc.font.lineHeight;
