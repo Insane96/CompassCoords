@@ -1,39 +1,50 @@
 package insane96mcp.compasscoords;
 
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.client.event.CustomizeGuiOverlayEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.IExtensionPoint;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.network.NetworkConstants;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
+import net.neoforged.neoforge.client.gui.ConfigurationScreen;
+import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 
 import java.util.ArrayList;
 
-@Mod(CompassCoords.MOD_ID)
+@Mod(value = CompassCoords.MOD_ID, dist = Dist.CLIENT)
 public class CompassCoords
 {
     public static final String MOD_ID = "compasscoords";
 
-    public CompassCoords() {
-        ModLoadingContext.get().registerExtensionPoint(IExtensionPoint.DisplayTest.class, () -> new IExtensionPoint.DisplayTest(() -> NetworkConstants.IGNORESERVERONLY, (remote, isServer) -> true));
-        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, CCConfig.CLIENT_SPEC);
+    public CompassCoords(ModContainer modContainer) {
+        modContainer.registerConfig(ModConfig.Type.CLIENT, CCConfig.CLIENT_SPEC);
+        modContainer.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
     }
 
-    @Mod.EventBusSubscriber()
+    @EventBusSubscriber(modid = MOD_ID, value = Dist.CLIENT)
     public static class PlayerUpdate {
         static Minecraft mc = Minecraft.getInstance();
 
         @SubscribeEvent
-        public static void renderGameOverlayEvent(CustomizeGuiOverlayEvent.DebugText event) {
-            if (mc.options.renderDebug && !mc.options.reducedDebugInfo().get())
+        public static void registerGuiLayers(RegisterGuiLayersEvent event) {
+            event.registerAbove(VanillaGuiLayers.DEBUG_OVERLAY, ResourceLocation.fromNamespaceAndPath(MOD_ID, "coordinates"), PlayerUpdate::renderCoordinates);
+        }
+
+        public static void renderCoordinates(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
+            if (mc.options.hideGui || mc.player == null)
+                return;
+            if (mc.getDebugOverlay().showDebugScreen() && !mc.showOnlyReducedInfo())
                 return;
 
             int scaledWidth = mc.getWindow().getGuiScaledWidth();
@@ -82,7 +93,7 @@ public class CompassCoords
                     int left = 2;
                     for (int i = 0; i < toDraw.size(); i++) {
                         String text = toDraw.get(i);
-                        drawOnScreenWithBackground(event.getGuiGraphics(), left, top, text, -1873784752, 14737632);
+                        drawOnScreenWithBackground(guiGraphics, left, top, text, -1873784752, 14737632);
                         top += mc.font.lineHeight;
                     }
                 }
@@ -91,7 +102,7 @@ public class CompassCoords
                     int left = scaledWidth - 2;
                     for (int i = 0; i < toDraw.size(); i++) {
                         String text = toDraw.get(i);
-                        drawOnScreenWithBackground(event.getGuiGraphics(), left - mc.font.width(text), top, text, -1873784752, 14737632);
+                        drawOnScreenWithBackground(guiGraphics, left - mc.font.width(text), top, text, -1873784752, 14737632);
                         top += mc.font.lineHeight;
                     }
                 }
@@ -100,7 +111,7 @@ public class CompassCoords
                     int left = 2;
                     for (int i = toDraw.size() - 1; i >= 0; i--) {
                         String text = toDraw.get(i);
-                        drawOnScreenWithBackground(event.getGuiGraphics(), left, top, text, -1873784752, 14737632);
+                        drawOnScreenWithBackground(guiGraphics, left, top, text, -1873784752, 14737632);
                         top -= mc.font.lineHeight;
                     }
                 }
@@ -109,7 +120,7 @@ public class CompassCoords
                     int left = scaledWidth - 2;
                     for (int i = toDraw.size() - 1; i >= 0; i--) {
                         String text = toDraw.get(i);
-                        drawOnScreenWithBackground(event.getGuiGraphics(), left - mc.font.width(text), top, text, -1873784752, 14737632);
+                        drawOnScreenWithBackground(guiGraphics, left - mc.font.width(text), top, text, -1873784752, 14737632);
                         top -= mc.font.lineHeight;
                     }
                 }

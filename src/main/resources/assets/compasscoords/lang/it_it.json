@@ -6,5 +6,8 @@
     "compasscoords.north": "Nord",
     "compasscoords.north_east": "Nord-Est",
     "compasscoords.east": "Est",
-    "compasscoords.south_east": "Sud-Est"
+    "compasscoords.south_east": "Sud-Est",
+    "compasscoords.configuration.title": "Configurazione Compass Coords",
+    "compasscoords.configuration.Position": "Posizione Coordinate",
+    "compasscoords.configuration.Show Y Coordinate": "Mostra Coordinata Y"
 }
